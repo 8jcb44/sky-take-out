@@ -8,7 +8,9 @@ import java.lang.annotation.Target;
 /**
  * 自定义注解，用于标识需要自动填充的字段
  */
+//方法级别注解，用于标识需要自动填充的字段
 @Target(ElementType.METHOD)
+//保留到运行时，才能获取注解中的值
 @Retention(RetentionPolicy.RUNTIME)
 public @interface AutoFill {
     //数据库操作操作类型: UPDATE INSERT
