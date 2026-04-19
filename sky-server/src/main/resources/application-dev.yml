@@ -8,6 +8,6 @@ sky:
     password: 1234
   alioss:
     endpoint: oss-cn-beijing.aliyuncs.com
-    access-key-id: YOUR_ACCESS_KEY_ID
-    access-key-secret: YOUR_ACCESS_KEY_SECRET
+    access-key-id: YOUR ACCESS KEY ID
+    access-key-secret: YOUR ACCESS KEY SECRET
     bucket-name: hsalg
