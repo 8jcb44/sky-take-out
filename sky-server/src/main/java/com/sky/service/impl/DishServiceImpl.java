@@ -199,7 +199,11 @@ public class DishServiceImpl implements DishService {
 
     }
 
-
+    /**
+     * 根据分类id查询菜品列表
+     * @param categoryId
+     * @return
+     */
     public List<Dish> list(Long categoryId) {
         //根据分类id查询菜品数据
         Dish dish = Dish.builder()
