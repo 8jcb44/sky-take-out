@@ -11,3 +11,8 @@ sky:
     access-key-id: YOUR ACCESS KEY ID
     access-key-secret: YOUR ACCESS KEY SECRET
     bucket-name: hsalg
+  redis:
+    host: localhost
+    port: 6379
+    database: 10
+
