@@ -208,4 +208,36 @@ public class OrderServiceImpl implements OrderService {
         return new PageResult(page.getTotal(),list);
     }
 
+    /**
+     * 查询订单详细
+     * @param id
+     * @return
+     */
+    public OrderVO details(Long id) {
+        //根据id查询订单
+        Orders orders = orderMapper.getById(id);
+
+        //查询该订单对应的菜品/套餐明细
+        List<OrderDetail> orderDetailList = orderDetailMapper.getByOrderId(orders.getId());
+
+        //将该订单及其详情封装到OrderVO并返回
+        OrderVO orderVO = new OrderVO();
+        BeanUtils.copyProperties(orders,orderVO);
+        orderVO.setOrderDetailList(orderDetailList);
+
+        // 根据地址簿ID查询完整地址信息
+        if (orders.getAddressBookId() != null) {
+            AddressBook addressBook = addressBookMapper.getById(orders.getAddressBookId());
+            if (addressBook != null) {
+                // 拼接完整地址：省市区 + 详细地址
+                String fullAddress = addressBook.getProvinceName() + addressBook.getCityName() + addressBook.getDistrictName() + addressBook.getDetail();
+                orderVO.setAddress(fullAddress);
+                orderVO.setPhone(addressBook.getPhone());
+                orderVO.setConsignee(addressBook.getConsignee());
+            }
+        }
+
+        return orderVO;
+    }
+
 }
