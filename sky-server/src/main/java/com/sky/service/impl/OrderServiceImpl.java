@@ -12,6 +12,7 @@ import com.sky.exception.OrderBusinessException;
 import com.sky.exception.ShoppingCartBusinessException;
 import com.sky.mapper.*;
 import com.sky.result.PageResult;
+import com.sky.result.Result;
 import com.sky.service.OrderService;
 import com.sky.utils.WeChatPayUtil;
 import com.sky.vo.OrderPaymentVO;
@@ -19,6 +20,7 @@ import com.sky.vo.OrderStatisticsVO;
 import com.sky.vo.OrderSubmitVO;
 
 import com.sky.vo.OrderVO;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,8 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -50,6 +54,9 @@ public class OrderServiceImpl implements OrderService {
     private UserMapper userMapper;
     @Autowired
     private WeChatPayUtil weChatPayUtil;
+    @Autowired
+    private OrderService orderService;
+
     /**
      * 用户下单
      * @param ordersSubmitDTO
@@ -441,5 +448,37 @@ public class OrderServiceImpl implements OrderService {
 
         orderMapper.update(orders);
     }
+
+    /**
+     * 取消订单
+     *
+     * @param ordersCancelDTO
+     */
+    public void cancel(OrdersCancelDTO ordersCancelDTO) {
+        //根据id查询订单
+        Orders ordersDB = orderMapper.getById(ordersCancelDTO.getId());
+
+        //支付状态
+        /*Integer payStatus = ordersDB.getPayStatus();
+        if (payStatus == 1) {
+            //用户已支付，需要退款
+            String refund = weChatPayUtil.refund(
+                    ordersDB.getNumber(),
+                    ordersDB.getNumber(),
+                    new BigDecimal(0.01),
+                    new BigDecimal(0.01));
+            log.info("申请退款：{}", refund);
+        }*/
+
+        //管理端取消订单需要退款，根据订单id更新订单状态，取消原因，取消时间
+        Orders orders = new Orders();
+        orders.setId(ordersCancelDTO.getId());
+        orders.setStatus(Orders.CANCELLED);
+
+        orders.setCancelReason(ordersCancelDTO.getCancelReason());
+        orders.setCancelTime(LocalDateTime.now());
+        orderMapper.update(orders);
+    }
+
 
 }
