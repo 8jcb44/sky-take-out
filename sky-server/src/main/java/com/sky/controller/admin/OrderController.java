@@ -14,6 +14,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -108,6 +109,18 @@ public class OrderController {
     @ApiOperation("派送订单")
     public Result delivery(@PathVariable("id") Long id){
         orderService.deliver(id);
+        return Result.success();
+    }
+
+    /**
+     * 完成订单
+     * @param id
+     * @return
+     */
+    @PutMapping("/complete/{id}")
+    @ApiOperation("完成订单")
+    public Result complete(@PathVariable("id") Long id){
+        orderService.complete(id);
         return Result.success();
     }
 
